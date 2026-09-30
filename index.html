@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Explora operaciones con conjuntos mediante un diagrama de Venn interactivo.">
+  <title>Conjuntos · Matemáticas Discretas</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/conjuntos.js" defer></script>
+  <script src="js/venn.js" defer></script>
+  <script src="js/sql-examples.js" defer></script>
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="index.html"><span class="brand-mark">∩</span> Conjuntos<span class="brand-divider"> / </span><span class="brand-course">Matemáticas Discretas</span></a><span class="tag">LABORATORIO INTERACTIVO</span></header>
+  <main>
+    <section class="intro" aria-labelledby="page-title"><p class="eyebrow">01 / TEORÍA DE CONJUNTOS</p><h1 id="page-title">Explora cómo se <em>conectan.</em></h1><p>Define tus conjuntos, elige una operación y descubre la región que representa.</p></section>
+    <div class="workspace">
+      <section class="card controls" aria-labelledby="input-title">
+        <div class="section-heading"><h2 id="input-title"><span class="step">01</span> Define los conjuntos</h2><button id="example" class="text-button" type="button">Cargar ejemplo ↗</button></div>
+        <p class="hint" id="input-help">Separa los elementos con comas. Los espacios y duplicados se eliminan.</p>
+        <div class="field"><label for="universe"><span class="set-badge universe">U</span> Universo <span class="optional">Para complementos</span></label><input id="universe" type="text" value="1,2,3,4,5,6" placeholder="Ej. 1,2,3,4,5,6" aria-describedby="input-help" autocomplete="off"><span class="count" id="universe-count"></span></div>
+        <div class="field"><label for="set-a"><span class="set-badge a">A</span> Conjunto A</label><input id="set-a" type="text" value="1,2,3" placeholder="Ej. 1,2,3" aria-describedby="input-help" autocomplete="off"><span class="count" id="a-count"></span></div>
+        <div class="field"><label for="set-b"><span class="set-badge b">B</span> Conjunto B</label><input id="set-b" type="text" value="3,4,5" placeholder="Ej. 3,4,5" aria-describedby="input-help" autocomplete="off"><span class="count" id="b-count"></span></div>
+        <div class="operation-heading"><h2><span class="step">02</span> Elige una operación</h2><button type="button" id="clear" class="text-button muted">Limpiar</button></div>
+        <div class="operations" role="group" aria-label="Operaciones de conjuntos">
+          <button type="button" data-operation="union" aria-pressed="true"><strong>A ∪ B</strong><span>Unión</span></button>
+          <button type="button" data-operation="intersection" aria-pressed="false"><strong>A ∩ B</strong><span>Intersección</span></button>
+          <button type="button" data-operation="differenceA" aria-pressed="false"><strong>A − B</strong><span>Diferencia</span></button>
+          <button type="button" data-operation="differenceB" aria-pressed="false"><strong>B − A</strong><span>Diferencia</span></button>
+          <button type="button" data-operation="complementA" aria-pressed="false"><strong>Aᶜ</strong><span>Complemento de A</span></button>
+          <button type="button" data-operation="complementB" aria-pressed="false"><strong>Bᶜ</strong><span>Complemento de B</span></button>
+        </div>
+        <div id="message" class="message" role="status" aria-live="polite" hidden></div>
+      </section>
+      <section class="card visualization" aria-labelledby="diagram-title">
+        <div class="section-heading"><h2 id="diagram-title"><span class="step">03</span> Visualiza el resultado</h2><span class="live"><span></span> EN VIVO</span></div>
+        <div class="diagram-heading"><h3 id="operation-title">Unión</h3><p id="operation-description"></p></div>
+        <div id="venn-container" class="venn-container"></div>
+        <div class="legend"><span class="legend-swatch"></span> Región de la operación<span class="legend-note">Diagrama esquemático</span></div>
+        <div class="result" aria-live="polite" aria-atomic="true"><div class="result-heading"><span>RESULTADO</span><span id="result-count"></span></div><p id="result-value"></p><p id="result-note"></p></div>
+        <p class="diagram-note">El diagrama muestra regiones matemáticas; el tamaño de las áreas no representa la cantidad de elementos.</p>
+        <section class="sql-panel" aria-labelledby="sql-title">
+          <div class="sql-heading"><h3 id="sql-title">SQL ANSI equivalente</h3><span id="sql-operation"></span></div>
+          <pre aria-live="polite" aria-atomic="true"><code id="sql-code"></code></pre>
+          <div class="join-example" aria-live="polite" aria-atomic="true">
+            <h4>Patrón JOIN relacionado · referencia conceptual</h4>
+            <pre><code id="join-code"></code></pre>
+            <h4>Interpretación de la región</h4>
+            <p id="join-explanation"></p>
+          </div>
+          <p>Ejemplo ilustrativo: A, B y U representan tablas con una columna <code>elemento</code>. El SQL no se ejecuta; no hay base de datos.</p>
+          <p class="sql-caveat">Las operaciones de conjuntos trabajan sobre conjuntos de resultados. Los JOINs relacionan filas entre tablas mediante una condición. Los diagramas de Venn se usan aquí como apoyo visual para comprender la relación conceptual.</p>
+          <p class="sql-caveat">Suponemos A(elemento), B(elemento) y U(elemento), con una clave común, única y sin NULL. UNION / INTERSECT / EXCEPT sin ALL eliminan duplicados; un JOIN puede multiplicar filas. Con duplicados, NULL u otras condiciones, los ejemplos no son equivalencias matemáticas generales.</p>
+        </section>
+      </section>
+    </div>
+    <details class="card join-guide-section">
+      <summary>JOINs y conjuntos <span>Entender JOIN visualmente</span></summary>
+      <p class="hint">A es el círculo izquierdo y B el derecho. Estas regiones son una referencia conceptual de las coincidencias, no de la cantidad ni de todas las columnas de las filas resultantes. ANTI JOIN es un nombre conceptual, no la sintaxis ANSI utilizada aquí.</p>
+      <div id="join-guide" class="join-guide-grid"></div>
+    </details>
+    <aside class="tip"><span aria-hidden="true">↳</span><p><strong>Un elemento, una sola vez.</strong> En un conjunto el orden no importa y los elementos no se repiten. Los complementos se calculan siempre respecto del universo U.</p></aside>
+  </main>
+  <footer><span>Matemáticas Discretas · Operaciones con Conjuntos</span><span>Aprende explorando.</span></footer>
+</body>
+</html>
