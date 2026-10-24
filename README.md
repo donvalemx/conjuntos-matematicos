@@ -71,7 +71,11 @@ Después de cada cambio, revisar que código, SSD y README describan el mismo co
 | `js/motor.js` | Analizador de expresiones avanzadas |
 | `js/distribucion.js` | Regiones, círculos y tarjetas de la calculadora |
 | `js/sql-examples.js` | Dataset fijo y consultas de ambos tipos |
-| `js/app.js` | Eventos y actualización de las tres pestañas |
+| `js/modelo.js` | Estado y cálculos de cada recorrido, sin acceso al DOM |
+| `js/vista.js` | Renderizado del DOM, tablas, mensajes y diagramas |
+| `js/app.js` | Controladores: conecta eventos, modelo y vista |
+
+La estructura sigue un MVC sencillo: el modelo conserva estado y reglas, la vista pinta la pantalla y los controladores responden a eventos. No requiere un framework ni un servidor.
 
 ## Comprobar cambios
 

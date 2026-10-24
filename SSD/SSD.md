@@ -28,6 +28,8 @@ conjuntos-discretas/
 │   ├── sql-examples.js
 │   ├── motor.js
 │   ├── distribucion.js
+│   ├── modelo.js
+│   ├── vista.js
 │   └── app.js
 ├── SSD/SSD.md
 └── README.md
@@ -44,11 +46,13 @@ conjuntos-discretas/
 | `sql-examples.js` | Dataset fijo y consultas de las seis operaciones |
 | `motor.js` | Analizador y evaluador de expresiones de la calculadora |
 | `distribucion.js` | Agrupación por pertenencia, tarjetas y círculos de la calculadora |
-| `app.js` | Eventos y actualización de los tres paneles |
+| `modelo.js` | Estado y decisiones de los tres recorridos, sin acceder al DOM |
+| `vista.js` | Actualización del DOM y construcción de tablas/campos |
+| `app.js` | Controladores y listeners; conecta modelo con vista |
 
-Cargar los seis scripts clásicos con `defer`, en el orden de la lista anterior. Exponer `Conjuntos`, `Venn`, `SqlExamples`, `Motor` y `Distribucion` en `globalThis`. Los scripts clásicos permiten abrir la aplicación con `file://`.
+Cargar los ocho scripts con `defer`, en el orden de la lista anterior. Exponer `Conjuntos`, `Venn`, `SqlExamples`, `Motor`, `Distribucion`, `Modelo` y `Vista` en `globalThis`. Los scripts clásicos permiten abrir la aplicación con `file://`.
 
-En `app.js`, registrar primero la navegación y después iniciar Introducción, Calculadora y SQL. Cada panel tendrá su propio estado y sus propios eventos.
+El código sigue un MVC sencillo. `modelo.js` contiene `IntroModel`, `CalculatorModel` y `SqlModel`; `vista.js` solo recibe estados y pinta HTML/SVG; `app.js` registra primero la navegación y después los tres controladores. Cada panel conserva su estado en su modelo. Los módulos de dominio y diagramas no leen controles directamente.
 
 ## 3. Estructura de la página y navegación
 
