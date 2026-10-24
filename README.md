@@ -1,85 +1,87 @@
-# Matemáticas Discretas — Operaciones con Conjuntos
+# Conjuntos · Matemáticas Discretas
 
-Aplicación frontend para definir U, A y B, calcular operaciones y visualizar sus regiones en un diagrama de Venn SVG. Interfaz en español, adaptable a escritorio y móvil, con actualizaciones inmediatas, navegación por teclado y mensajes de validación accesibles.
+Aplicación web para estudiar conjuntos en tres pasos: aprender las operaciones básicas, crear expresiones propias y ver su aplicación en SQL. Está escrita en español y funciona en escritorio y móvil.
 
-## Tecnologías
+## Abrir la aplicación
 
-HTML5, CSS3, JavaScript puro y SVG. Sin dependencias, fuentes externas, servicios, backend, base de datos ni proceso de compilación.
+Abre `index.html` en un navegador moderno. No requiere instalación ni conexión a internet.
 
-## Estructura
-
-```text
-conjuntos-discretas/
-├── index.html
-├── css/
-│   └── styles.css
-├── js/
-│   ├── app.js
-│   ├── conjuntos.js
-│   ├── sql-examples.js
-│   └── venn.js
-├── assets/
-│   └── .gitkeep
-└── README.md
-```
-
-`conjuntos.js` contiene funciones matemáticas puras, normalización y validación. `venn.js` dibuja y sombrea las regiones SVG usando máscaras y recortes. `app.js` conecta entradas, botones y resultados. Los scripts clásicos se cargan en orden con `defer`, por lo que también funcionan con `file://`.
-
-## Cómo ejecutar
-
-Abre `index.html` directamente en un navegador moderno. No requiere instalación ni conexión a internet.
-
-También puedes ejecutar desde la carpeta del proyecto:
+También puedes usar un servidor estático desde la carpeta del proyecto:
 
 ```sh
-cd conjuntos-discretas
 python3 -m http.server 8000
 ```
 
-Abre http://localhost:8000. Detén el servidor con `Ctrl+C`.
+Después abre `http://localhost:8000`. Python solo es necesario para esta opción.
 
-## Ejemplo y operaciones
+## Las tres pestañas
+
+| Pestaña | Qué permite hacer |
+| --- | --- |
+| Introducción | Editar U, A y B; elegir unión, intersección, diferencia o complemento; ver resultado y Venn |
+| Calculadora de conjuntos | Definir de uno a ocho conjuntos y evaluar expresiones, cardinalidades, relaciones y lógica |
+| Aplicación en SQL | Seleccionar una operación y comparar su consulta con operador de conjuntos y su alternativa JOIN, junto al diagrama y la salida |
+
+Cada pestaña conserva sus propios datos y selección. Cambiar de pestaña no los borra; recargar la página restaura los ejemplos iniciales.
+
+El ejemplo inicial de Introducción y SQL es U=`1,2,3,4,5,6`, A=`1,2,3` y B=`3,4,5`. SQL usa un dataset fijo e independiente; las consultas son ilustrativas y no se ejecutan en la aplicación.
+
+## Escribir conjuntos y expresiones
+
+En los campos de conjuntos, escribe valores separados por comas, sin llaves ni etiquetas. Se eliminan duplicados, entradas vacías y espacios exteriores. `a` y `A` son elementos distintos.
+
+U vacío significa que no se ha definido el universo. Los complementos necesitan U. Cuando U tiene contenido, todos los conjuntos deben ser subconjuntos suyos.
+
+Ejemplos para la calculadora:
 
 ```text
-U = 1,2,3,4,5,6
-A = 1,2,3
-B = 3,4,5
+(A ∪ B) − C
+A △ B
+Aᶜ
+|A ∪ B|
+A ⊆ B
+3 ∈ A
+(A ⊆ U) ∧ (B ⊆ U)
 ```
 
-Escribe únicamente los valores separados por comas, sin `U =`, llaves ni etiquetas. El ejemplo se carga al inicio y puede restaurarse con «Cargar ejemplo».
+**Cargar ejemplo** en la calculadora define tres conjuntos y evalúa `(A ∪ B) − C`, cuyo resultado es `{1,3,4}`. Los paréntesis cambian la agrupación. La intersección tiene prioridad sobre unión y diferencias; los conectores lógicos se resuelven de izquierda a derecha.
 
-| Operación | Significado | Resultado del ejemplo |
-| --- | --- | --- |
-| A ∪ B | Unión | {1,2,3,4,5} |
-| A ∩ B | Intersección | {3} |
-| A − B | Diferencia | {1,2} |
-| B − A | Diferencia | {4,5} |
-| Aᶜ | U − A | {4,5,6} |
-| Bᶜ | U − B | {1,2,6} |
+La herramienta admite conjuntos finitos de texto. No evalúa aritmética, intervalos ni conjuntos infinitos. La igualdad compara conjuntos; una expresión como `|A| = 3` no está admitida. Para buscar un elemento con `∈`, este debe ser un token sin espacios ni símbolos de operación, por ejemplo `Ana ∈ A`.
 
-## Reglas y validaciones
+Los círculos son esquemáticos. Las tarjetas de la calculadora muestran las pertenencias exactas; a partir de cuatro conjuntos se muestran solo tarjetas. En SQL, ambas consultas se comparan con valores sin NULL y la columna común `elemento`; el orden de filas puede variar.
 
-### SQL ANSI equivalente
+## Estudiar y reconstruir el proyecto
 
-Cada operación muestra un ejemplo SQL que se actualiza al seleccionarla: `UNION` para la unión, `INTERSECT` para la intersección y `EXCEPT` para diferencias y complementos. A − B usa A EXCEPT B; B − A invierte ese orden. Los complementos usan U EXCEPT A o U EXCEPT B.
+- [SSD/SSD.md](SSD/SSD.md): especificación completa para construir la aplicación desde cero, con pantallas, datos, reglas, consultas, eventos y resultados esperados.
 
-El panel supone tablas A, B y U con una columna `elemento`. Es exclusivamente ilustrativo: no ejecuta consultas ni requiere una base de datos. El ejemplo permanece visible incluso si las entradas necesitan corrección. Las consultas y explicaciones están centralizadas en `sql-examples.js`; `app.js` las presenta sin modificar los cálculos.
+La guía técnica y el informe de auditoría son documentos locales de apoyo; sus Markdown y el PDF de la guía están excluidos de Git.
 
-Cada operación incluye un patrón JOIN relacionado y una interpretación de la región: FULL OUTER JOIN para ambos círculos, INNER JOIN para las coincidencias y LEFT JOIN con un filtro IS NULL para diferencias y complementos. La guía desplegable «JOINs y conjuntos» muestra seis diagramas pequeños, explicaciones y ejemplos ANSI: INNER, LEFT, RIGHT, FULL OUTER, LEFT ONLY y RIGHT ONLY. ANTI JOIN es un nombre conceptual; se muestra el patrón SQL real.
+Git solo admite los archivos de la aplicación, la SSD, el README y `.gitignore`. Si añades un recurso que la aplicación necesita para ejecutarse, incluye su ruta en la lista de excepciones de `.gitignore`.
 
-Los operadores de conjuntos trabajan sobre resultados; los JOINs relacionan filas. La comparación supone una clave `elemento` única y sin NULL. Los operadores sin ALL eliminan duplicados, mientras que un JOIN puede multiplicar filas. Con duplicados, NULL u otras condiciones no hay equivalencia general. Los diagramas son apoyos conceptuales. `venn.js` reutiliza las regiones y genera identificadores SVG únicos para que los siete diagramas no interfieran entre sí.
+Después de cada cambio, revisar que código, SSD y README describan el mismo comportamiento. Actualizar ejemplos, reglas y resultados esperados cuando corresponda. La SSD debe seguir siendo suficiente para reconstruir la aplicación desde una carpeta vacía y obtener las mismas funciones y resultados.
 
-### Entradas y resultados
+## Archivos de código
 
-- Se eliminan espacios en los extremos, entradas vacías entre comas y elementos duplicados.
-- Los elementos son cadenas sensibles a mayúsculas: `a` y `A` son distintos, al igual que `01` y `1`. Se conserva el orden de aparición; no se interpretan intervalos o expresiones.
-- A y B pueden estar vacíos; un resultado vacío se presenta como `∅`.
-- Un U vacío se considera no definido. Unión, intersección y diferencias funcionan sin U. Los complementos requieren al menos un elemento en U; esta interfaz no distingue un universo vacío de uno no especificado.
-- Cuando se proporciona U, se comprueba que tanto A como B sean subconjuntos de U para mantener coherencia con el diagrama. Si hay elementos fuera de U, se bloquea el cálculo y se indican los elementos a corregir.
-- Los complementos siempre se calculan respecto de U, nunca respecto del otro conjunto. La función pura `complement(U, set)` obtiene `U − set`; `calculate` aplica las validaciones antes de usarla.
-- El SVG muestra regiones, sin distribuir elementos individuales. Su geometría es esquemática, incluso si un conjunto está vacío o coincide con otro. En los complementos se sombrea también la región exterior al círculo correspondiente, dentro del rectángulo U.
-- Los valores del usuario se muestran mediante `textContent`.
+| Archivo | Función |
+| --- | --- |
+| `index.html` | Estructura de las tres pestañas |
+| `css/styles.css` | Estilos y adaptación a pantallas estrechas |
+| `js/conjuntos.js` | Operaciones básicas y validaciones |
+| `js/venn.js` | Venn de dos conjuntos, compartido por Introducción y SQL |
+| `js/motor.js` | Analizador de expresiones avanzadas |
+| `js/distribucion.js` | Regiones, círculos y tarjetas de la calculadora |
+| `js/sql-examples.js` | Dataset fijo y consultas de ambos tipos |
+| `js/app.js` | Eventos y actualización de las tres pestañas |
 
-## AI / Developer Handoff
+## Comprobar cambios
 
-Read [SSD/SSD.md](SSD/SSD.md) before modifying the project.
+La carpeta `tests/` contiene pruebas locales y está excluida de Git. Si tienes esos archivos, puedes ejecutarlos con herramientas de desarrollo; no son necesarios para abrir la aplicación:
+
+```sh
+node tests/auditoria.cjs
+python3 tests/sql.py
+```
+
+La primera revisa cálculos, expresiones, regiones y referencias entre HTML y JavaScript. La segunda ejecuta las consultas en SQLite temporal y compara las dos alternativas, también con duplicados. Requiere Node, Python y SQLite 3.39 o posterior dentro de Python.
+
+Revisa además la navegación con clic y teclado, los campos dinámicos, los errores y el diseño móvil. Las pruebas de cálculo no comprueban por sí solas la presentación en el navegador.

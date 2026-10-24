@@ -1,0 +1,21 @@
+# Ignorar todo salvo la aplicación, su especificación y el README.
+# Si la app necesita un archivo nuevo, añadir aquí su ruta exacta.
+*
+
+!/.gitignore
+!/index.html
+!/README.md
+
+!/SSD/
+!/SSD/SSD.md
+
+!/css/
+!/css/styles.css
+
+!/js/
+!/js/app.js
+!/js/conjuntos.js
+!/js/distribucion.js
+!/js/motor.js
+!/js/sql-examples.js
+!/js/venn.js

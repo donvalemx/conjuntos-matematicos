@@ -1,67 +1,237 @@
 <!doctype html>
 <html lang="es">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Explora operaciones con conjuntos mediante un diagrama de Venn interactivo.">
-  <title>Conjuntos · Matemáticas Discretas</title>
-  <link rel="stylesheet" href="css/styles.css">
-  <script src="js/conjuntos.js" defer></script>
-  <script src="js/venn.js" defer></script>
-  <script src="js/sql-examples.js" defer></script>
-  <script src="js/app.js" defer></script>
-</head>
-<body>
-  <header class="topbar"><a class="brand" href="index.html"><span class="brand-mark">∩</span> Conjuntos<span class="brand-divider"> / </span><span class="brand-course">Matemáticas Discretas</span></a><span class="tag">LABORATORIO INTERACTIVO</span></header>
-  <main>
-    <section class="intro" aria-labelledby="page-title"><p class="eyebrow">01 / TEORÍA DE CONJUNTOS</p><h1 id="page-title">Explora cómo se <em>conectan.</em></h1><p>Define tus conjuntos, elige una operación y descubre la región que representa.</p></section>
-    <div class="workspace">
-      <section class="card controls" aria-labelledby="input-title">
-        <div class="section-heading"><h2 id="input-title"><span class="step">01</span> Define los conjuntos</h2><button id="example" class="text-button" type="button">Cargar ejemplo ↗</button></div>
-        <p class="hint" id="input-help">Separa los elementos con comas. Los espacios y duplicados se eliminan.</p>
-        <div class="field"><label for="universe"><span class="set-badge universe">U</span> Universo <span class="optional">Para complementos</span></label><input id="universe" type="text" value="1,2,3,4,5,6" placeholder="Ej. 1,2,3,4,5,6" aria-describedby="input-help" autocomplete="off"><span class="count" id="universe-count"></span></div>
-        <div class="field"><label for="set-a"><span class="set-badge a">A</span> Conjunto A</label><input id="set-a" type="text" value="1,2,3" placeholder="Ej. 1,2,3" aria-describedby="input-help" autocomplete="off"><span class="count" id="a-count"></span></div>
-        <div class="field"><label for="set-b"><span class="set-badge b">B</span> Conjunto B</label><input id="set-b" type="text" value="3,4,5" placeholder="Ej. 3,4,5" aria-describedby="input-help" autocomplete="off"><span class="count" id="b-count"></span></div>
-        <div class="operation-heading"><h2><span class="step">02</span> Elige una operación</h2><button type="button" id="clear" class="text-button muted">Limpiar</button></div>
-        <div class="operations" role="group" aria-label="Operaciones de conjuntos">
-          <button type="button" data-operation="union" aria-pressed="true"><strong>A ∪ B</strong><span>Unión</span></button>
-          <button type="button" data-operation="intersection" aria-pressed="false"><strong>A ∩ B</strong><span>Intersección</span></button>
-          <button type="button" data-operation="differenceA" aria-pressed="false"><strong>A − B</strong><span>Diferencia</span></button>
-          <button type="button" data-operation="differenceB" aria-pressed="false"><strong>B − A</strong><span>Diferencia</span></button>
-          <button type="button" data-operation="complementA" aria-pressed="false"><strong>Aᶜ</strong><span>Complemento de A</span></button>
-          <button type="button" data-operation="complementB" aria-pressed="false"><strong>Bᶜ</strong><span>Complemento de B</span></button>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Aprende operaciones de conjuntos, crea expresiones y explora su aplicación en SQL.">
+    <title>Conjuntos · Matemáticas Discretas</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/conjuntos.js" defer></script>
+    <script src="js/venn.js" defer></script>
+    <script src="js/sql-examples.js" defer></script>
+    <script src="js/motor.js" defer></script>
+    <script src="js/distribucion.js" defer></script>
+    <script src="js/app.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">∩</span> Conjuntos<span class="brand-divider"> / </span>
+        <span class="brand-course">Matemáticas Discretas</span>
+      </a>
+      <span class="tag">LABORATORIO INTERACTIVO</span>
+    </header>
+    <nav class="experience-tabs" role="tablist" aria-label="Recorrido de aprendizaje">
+      <button id="tab-intro" class="experience-tab" type="button" role="tab" aria-selected="true" aria-controls="intro-panel" tabindex="0">Introducción</button>
+      <button id="tab-calculator" class="experience-tab" type="button" role="tab" aria-selected="false" aria-controls="calculator-panel" tabindex="-1">Calculadora de conjuntos</button>
+      <button id="tab-sql" class="experience-tab" type="button" role="tab" aria-selected="false" aria-controls="sql-panel" tabindex="-1">Aplicación en SQL</button>
+    </nav>
+    <main>
+      <section id="intro-panel" role="tabpanel" aria-labelledby="tab-intro" tabindex="0">
+        <section class="intro" aria-labelledby="page-title">
+          <p class="eyebrow">01 / CONCEPTOS GENERALES</p>
+          <h1 id="page-title">Operaciones con <em>conjuntos.</em>
+          </h1>
+          <p>Explora unión, intersección, diferencia y complemento con ejemplos visuales.</p>
+        </section>
+        <div class="workspace">
+          <section class="card controls" aria-labelledby="input-title">
+            <div class="section-heading">
+              <h2 id="input-title">
+                <span class="step">01</span> Define los conjuntos</h2>
+              <button id="example" class="text-button" type="button">Cargar ejemplo ↗</button>
+            </div>
+            <p class="hint" id="input-help">Separa los elementos con comas. Se eliminan espacios exteriores y duplicados.</p>
+            <div class="field">
+              <label for="universe">
+                <span class="set-badge universe">U</span> Universo <span class="optional">Para complementos</span>
+              </label>
+              <input id="universe" type="text" value="1,2,3,4,5,6" placeholder="Ej. 1,2,3,4,5,6" aria-describedby="input-help" autocomplete="off">
+              <span class="count" id="universe-count"></span>
+            </div>
+            <div class="field">
+              <label for="set-a">
+                <span class="set-badge a">A</span> Conjunto A</label>
+              <input id="set-a" type="text" value="1,2,3" placeholder="Ej. 1,2,3" aria-describedby="input-help" autocomplete="off">
+              <span class="count" id="a-count"></span>
+            </div>
+            <div class="field">
+              <label for="set-b">
+                <span class="set-badge b">B</span> Conjunto B</label>
+              <input id="set-b" type="text" value="3,4,5" placeholder="Ej. 3,4,5" aria-describedby="input-help" autocomplete="off">
+              <span class="count" id="b-count"></span>
+            </div>
+            <div class="operation-heading">
+              <h2>
+                <span class="step">02</span> Elige una operación</h2>
+              <button type="button" id="clear" class="text-button muted">Limpiar</button>
+            </div>
+            <div class="operations" role="group" aria-label="Operaciones de conjuntos">
+              <button type="button" data-operation="union" aria-pressed="true">
+                <strong>A ∪ B</strong>
+                <span>Unión</span>
+              </button>
+              <button type="button" data-operation="intersection" aria-pressed="false">
+                <strong>A ∩ B</strong>
+                <span>Intersección</span>
+              </button>
+              <button type="button" data-operation="differenceA" aria-pressed="false">
+                <strong>A − B</strong>
+                <span>Diferencia</span>
+              </button>
+              <button type="button" data-operation="differenceB" aria-pressed="false">
+                <strong>B − A</strong>
+                <span>Diferencia</span>
+              </button>
+              <button type="button" data-operation="complementA" aria-pressed="false">
+                <strong>Aᶜ</strong>
+                <span>Complemento de A</span>
+              </button>
+              <button type="button" data-operation="complementB" aria-pressed="false">
+                <strong>Bᶜ</strong>
+                <span>Complemento de B</span>
+              </button>
+            </div>
+            <div id="message" class="message" role="status" aria-live="polite" hidden></div>
+          </section>
+          <section class="card visualization" aria-labelledby="diagram-title">
+            <div class="section-heading">
+              <h2 id="diagram-title">
+                <span class="step">03</span> Visualiza el resultado</h2>
+              <span class="live">
+                <span>
+                </span> EN VIVO</span>
+            </div>
+            <div class="diagram-heading">
+              <h3 id="operation-title">Unión</h3>
+              <p id="operation-description"></p>
+            </div>
+            <div id="venn-container" class="venn-container"></div>
+            <div class="legend">
+              <span class="legend-swatch"></span> Región de la operación<span class="legend-note">Diagrama esquemático</span>
+            </div>
+            <div class="result" aria-live="polite" aria-atomic="true">
+              <div class="result-heading">
+                <span>RESULTADO</span>
+                <span id="result-count"></span>
+              </div>
+              <p id="result-value"></p>
+              <p id="result-note"></p>
+            </div>
+            <p class="diagram-note">El diagrama muestra regiones matemáticas; el tamaño de las áreas no representa la cantidad de elementos.</p>
+          </section>
         </div>
-        <div id="message" class="message" role="status" aria-live="polite" hidden></div>
+        <aside class="tip">
+          <span aria-hidden="true">↳</span>
+          <p>
+            <strong>Un elemento, una sola vez.</strong> En un conjunto el orden no importa y los elementos no se repiten. Los complementos se calculan siempre respecto del universo U.</p>
+        </aside>
       </section>
-      <section class="card visualization" aria-labelledby="diagram-title">
-        <div class="section-heading"><h2 id="diagram-title"><span class="step">03</span> Visualiza el resultado</h2><span class="live"><span></span> EN VIVO</span></div>
-        <div class="diagram-heading"><h3 id="operation-title">Unión</h3><p id="operation-description"></p></div>
-        <div id="venn-container" class="venn-container"></div>
-        <div class="legend"><span class="legend-swatch"></span> Región de la operación<span class="legend-note">Diagrama esquemático</span></div>
-        <div class="result" aria-live="polite" aria-atomic="true"><div class="result-heading"><span>RESULTADO</span><span id="result-count"></span></div><p id="result-value"></p><p id="result-note"></p></div>
-        <p class="diagram-note">El diagrama muestra regiones matemáticas; el tamaño de las áreas no representa la cantidad de elementos.</p>
-        <section class="sql-panel" aria-labelledby="sql-title">
-          <div class="sql-heading"><h3 id="sql-title">SQL ANSI equivalente</h3><span id="sql-operation"></span></div>
-          <pre aria-live="polite" aria-atomic="true"><code id="sql-code"></code></pre>
-          <div class="join-example" aria-live="polite" aria-atomic="true">
-            <h4>Patrón JOIN relacionado · referencia conceptual</h4>
-            <pre><code id="join-code"></code></pre>
-            <h4>Interpretación de la región</h4>
-            <p id="join-explanation"></p>
+      <section id="calculator-panel" role="tabpanel" aria-labelledby="tab-calculator" tabindex="0" hidden>
+        <section class="intro advanced-intro" aria-labelledby="calculator-title">
+          <p class="eyebrow">02 / EXPLORACIÓN AVANZADA</p>
+          <h1 id="calculator-title">Calculadora de <em>conjuntos.</em>
+          </h1>
+          <p>Crea tus propios conjuntos aquí. Construye expresiones, examina relaciones y observa cómo se distribuyen sus elementos.</p>
+        </section>
+        <div class="advanced-layout">
+          <section class="card calculator" aria-label="Definición de conjuntos y calculadora">
+            <h2>01 · Define tus conjuntos</h2>
+            <label for="quantity">Cantidad de conjuntos (1 a 8)</label>
+            <input id="quantity" type="number" min="1" max="8" value="2">
+            <label for="advanced-universe">Universo U · necesario para complementos</label>
+            <input id="advanced-universe" value="1,2,3,4,5,6" aria-describedby="advanced-help">
+            <p id="advanced-help" class="muted">Elementos separados por comas. Se ignoran duplicados y espacios exteriores. Las mayúsculas sí importan.</p>
+            <div id="sets"></div>
+            <div class="row">
+              <button id="advanced-example" type="button">Cargar ejemplo</button>
+              <button id="advanced-clear" type="button">Limpiar</button>
+            </div>
+            <div class="expression-section">
+              <h2>02 · Escribe una expresión</h2>
+              <label for="advanced-expression">Operación o relación</label>
+              <input id="advanced-expression" value="A ∪ B" autocomplete="off" spellcheck="false" aria-describedby="syntax">
+              <div id="keys" class="keys" aria-label="Símbolos para la expresión"></div>
+              <p id="syntax" class="muted">Ejemplos: A ∪ B · Aᶜ · |A| · A ⊆ B · 3 ∈ A. Utiliza los botones de los conjuntos definidos arriba.<br>Prioridad: paréntesis, complemento, intersección y después unión, diferencia y diferencia simétrica de izquierda a derecha.</p>
+              <button id="calculate" class="primary" type="button">Calcular</button>
+              <p id="error" role="status" class="error" hidden></p>
+              <div class="result" aria-live="polite" aria-atomic="true">
+                <small>RESULTADO</small>
+                <p id="advanced-result"></p>
+              </div>
+            </div>
+          </section>
+          <section class="card visualization">
+            <h2>03 · Distribución de elementos</h2>
+            <div id="advanced-diagram"></div>
+            <p class="muted">Los círculos son esquemáticos; su tamaño no representa cardinalidades. Las tarjetas muestran las pertenencias exactas de los elementos. Para 4–8 conjuntos se muestran solo tarjetas.</p>
+            <div class="summary-section">
+              <h2>Resumen de operaciones</h2>
+              <div id="summary"></div>
+            </div>
+          </section>
+        </div>
+        <details class="card advanced-guide">
+          <summary>Qué puedes calcular</summary>
+          <p>Unión ∪, intersección ∩, diferencia −, diferencia simétrica △, complementos Aᶜ o A', cardinalidad |A|, inclusión ⊆, inclusión propia ⊂, sus inversas ⊇ y ⊃, igualdad =, desigualdad ≠, pertenencia ∈ y no pertenencia ∉.</p>
+          <p>Para lógica: (A ⊆ B) ∧ (B ⊆ U), ∨, ¬ y →. Los conectores se evalúan de izquierda a derecha. Los paréntesis permiten agrupar operaciones de conjuntos y relaciones individuales.</p>
+          <p>Esta herramienta trabaja con conjuntos finitos de elementos de texto; no evalúa intervalos, conjuntos anidados, comprensión, cuantificadores ni conjuntos infinitos.</p>
+        </details>
+      </section>
+      <section id="sql-panel" role="tabpanel" aria-labelledby="tab-sql" tabindex="0" hidden>
+        <section class="intro advanced-intro" aria-labelledby="sql-page-title">
+          <p class="eyebrow">03 / APLICACIÓN ESPECÍFICA</p>
+          <h1 id="sql-page-title">Conjuntos en <em>SQL.</em>
+          </h1>
+          <p>Selecciona una operación para ver su diagrama, consulta y resultado con los mismos datos.</p>
+        </section>
+        <section class="card sql-workspace" aria-labelledby="sql-query-heading">
+          <label for="sql-operation-select">Operación de conjuntos</label>
+          <select id="sql-operation-select" class="sql-operation-select">
+            <option value="union">Unión · A ∪ B</option>
+            <option value="intersection">Intersección · A ∩ B</option>
+            <option value="differenceA">Diferencia · A − B</option>
+            <option value="differenceB">Diferencia · B − A</option>
+            <option value="complementA">Complemento de A · Aᶜ</option>
+            <option value="complementB">Complemento de B · Bᶜ</option>
+          </select>
+          <p class="sql-dataset-label">Datos de entrada · columna <code>elemento</code>
+          </p>
+          <div id="sql-dataset" class="sql-dataset" aria-live="polite"></div>
+          <div class="sql-lesson-grid">
+            <section class="sql-lesson-card" aria-labelledby="sql-diagram-heading">
+              <h2 id="sql-diagram-heading">Diagrama</h2>
+              <div id="sql-venn" class="sql-venn"></div>
+              <p id="sql-operation-description" class="sql-explanation"></p>
+            </section>
+            <section class="sql-lesson-card" aria-labelledby="sql-query-heading">
+              <h2 id="sql-query-heading">Consultas equivalentes <span id="sql-operation"></span>
+              </h2>
+              <div class="sql-query-pair">
+                <section class="sql-query-option">
+                  <h3>Operador de conjuntos</h3>
+                  <pre class="sql-query"><code id="sql-code"></code></pre>
+                </section>
+                <section class="sql-query-option">
+                  <h3>Alternativa con JOIN</h3>
+                  <pre class="sql-query"><code id="join-code"></code></pre>
+                  <p id="join-explanation" class="sql-footnote"></p>
+                </section>
+              </div>
+              <p class="sql-footnote">Ambas consultas producen los mismos elementos si no hay valores NULL. DISTINCT elimina duplicados; el orden de las filas puede variar. Ejemplos didácticos, sin ejecución de SQL.</p>
+              <div class="sql-output-heading">
+                <h3>Salida</h3>
+                <span id="sql-result-label"></span>
+              </div>
+              <div id="sql-output" class="sql-output" aria-live="polite" aria-atomic="true"></div>
+            </section>
           </div>
-          <p>Ejemplo ilustrativo: A, B y U representan tablas con una columna <code>elemento</code>. El SQL no se ejecuta; no hay base de datos.</p>
-          <p class="sql-caveat">Las operaciones de conjuntos trabajan sobre conjuntos de resultados. Los JOINs relacionan filas entre tablas mediante una condición. Los diagramas de Venn se usan aquí como apoyo visual para comprender la relación conceptual.</p>
-          <p class="sql-caveat">Suponemos A(elemento), B(elemento) y U(elemento), con una clave común, única y sin NULL. UNION / INTERSECT / EXCEPT sin ALL eliminan duplicados; un JOIN puede multiplicar filas. Con duplicados, NULL u otras condiciones, los ejemplos no son equivalencias matemáticas generales.</p>
         </section>
       </section>
-    </div>
-    <details class="card join-guide-section">
-      <summary>JOINs y conjuntos <span>Entender JOIN visualmente</span></summary>
-      <p class="hint">A es el círculo izquierdo y B el derecho. Estas regiones son una referencia conceptual de las coincidencias, no de la cantidad ni de todas las columnas de las filas resultantes. ANTI JOIN es un nombre conceptual, no la sintaxis ANSI utilizada aquí.</p>
-      <div id="join-guide" class="join-guide-grid"></div>
-    </details>
-    <aside class="tip"><span aria-hidden="true">↳</span><p><strong>Un elemento, una sola vez.</strong> En un conjunto el orden no importa y los elementos no se repiten. Los complementos se calculan siempre respecto del universo U.</p></aside>
-  </main>
-  <footer><span>Matemáticas Discretas · Operaciones con Conjuntos</span><span>Aprende explorando.</span></footer>
-</body>
+    </main>
+    <footer>
+      <span>Matemáticas Discretas · Operaciones con Conjuntos</span>
+      <span>Aprende explorando.</span>
+    </footer>
+  </body>
 </html>
