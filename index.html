@@ -27,6 +27,7 @@
       <button id="tab-intro" class="experience-tab" type="button" role="tab" aria-selected="true" aria-controls="intro-panel" tabindex="0">Introducción</button>
       <button id="tab-calculator" class="experience-tab" type="button" role="tab" aria-selected="false" aria-controls="calculator-panel" tabindex="-1">Calculadora de conjuntos</button>
       <button id="tab-sql" class="experience-tab" type="button" role="tab" aria-selected="false" aria-controls="sql-panel" tabindex="-1">Aplicación en SQL</button>
+      <button id="tab-tutorial" class="experience-tab" type="button" role="tab" aria-selected="false" aria-controls="tutorial-panel" tabindex="-1">Tutorial</button>
     </nav>
     <main>
       <section id="intro-panel" role="tabpanel" aria-labelledby="tab-intro" tabindex="0">
@@ -228,6 +229,19 @@
               <div id="sql-output" class="sql-output" aria-live="polite" aria-atomic="true"></div>
             </section>
           </div>
+        </section>
+      </section>
+      <section id="tutorial-panel" role="tabpanel" aria-labelledby="tab-tutorial" tabindex="0" hidden>
+        <section class="intro advanced-intro" aria-labelledby="tutorial-title">
+          <p class="eyebrow">04 / TUTORIAL</p>
+          <h1 id="tutorial-title">Aprende con un <em>video.</em></h1>
+          <p>Reproduce el tutorial para repasar los conceptos de conjuntos.</p>
+        </section>
+        <section class="card tutorial-video" aria-label="Video tutorial de YouTube">
+          <div class="tutorial-video-frame">
+            <iframe src="https://www.youtube.com/embed/iWIjMo_SGEI" title="Video tutorial sobre conjuntos" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+          <p class="tutorial-video-link">¿No se reproduce el video? <a href="https://www.youtube.com/watch?v=iWIjMo_SGEI" target="_blank" rel="noopener noreferrer">Ábrelo directamente en YouTube ↗</a></p>
         </section>
       </section>
     </main>
