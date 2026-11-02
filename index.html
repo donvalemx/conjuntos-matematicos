@@ -140,22 +140,21 @@
         <div class="advanced-layout">
           <section class="card calculator" aria-label="Definición de conjuntos y calculadora">
             <h2>01 · Define tus conjuntos</h2>
-            <label for="quantity">Cantidad de conjuntos (1 a 8)</label>
-            <input id="quantity" type="number" min="1" max="8" value="2">
+            <label for="quantity">Cantidad de conjuntos (1 a 5)</label>
+            <input id="quantity" type="number" min="1" max="5" value="2">
             <label for="advanced-universe">Universo U · necesario para complementos</label>
             <input id="advanced-universe" value="1,2,3,4,5,6" aria-describedby="advanced-help">
             <p id="advanced-help" class="muted">Elementos separados por comas. Se ignoran duplicados y espacios exteriores. Las mayúsculas sí importan.</p>
             <div id="sets"></div>
             <div class="row">
-              <button id="advanced-example" type="button">Cargar ejemplo</button>
               <button id="advanced-clear" type="button">Limpiar</button>
             </div>
             <div class="expression-section">
               <h2>02 · Escribe una expresión</h2>
               <label for="advanced-expression">Operación o relación</label>
               <input id="advanced-expression" value="A ∪ B" autocomplete="off" spellcheck="false" aria-describedby="syntax">
-              <div id="keys" class="keys" aria-label="Símbolos para la expresión"></div>
-              <p id="syntax" class="muted">Ejemplos: A ∪ B · Aᶜ · |A| · A ⊆ B · 3 ∈ A. Utiliza los botones de los conjuntos definidos arriba.<br>Prioridad: paréntesis, complemento, intersección y después unión, diferencia y diferencia simétrica de izquierda a derecha.</p>
+              <div id="keys" class="keys" aria-label="Símbolos de teoría de conjuntos"></div>
+              <p id="syntax" class="muted">Usa los botones para insertar conjuntos y símbolos en la expresión. Ejemplos: A ∪ B · Aᶜ · |A| · A ⊆ B · 3 ∈ A.<br>Prioridad: paréntesis, complemento, intersección y después unión, diferencia y diferencia simétrica de izquierda a derecha.</p>
               <button id="calculate" class="primary" type="button">Calcular</button>
               <p id="error" role="status" class="error" hidden></p>
               <div class="result" aria-live="polite" aria-atomic="true">
@@ -167,7 +166,7 @@
           <section class="card visualization">
             <h2>03 · Distribución de elementos</h2>
             <div id="advanced-diagram"></div>
-            <p class="muted">Los círculos son esquemáticos; su tamaño no representa cardinalidades. Las tarjetas muestran las pertenencias exactas de los elementos. Para 4–8 conjuntos se muestran solo tarjetas.</p>
+            <p class="muted">Los círculos son esquemáticos; su tamaño no representa cardinalidades. El diagrama representa visualmente hasta cinco conjuntos y las tarjetas complementan la información con sus pertenencias exactas.</p>
             <div class="summary-section">
               <h2>Resumen de operaciones</h2>
               <div id="summary"></div>

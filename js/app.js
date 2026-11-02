@@ -25,15 +25,25 @@
   }
   function initCalculator() {
     const model = new Modelo.CalculatorModel(); const quantity = byId('quantity'); const universe = byId('advanced-universe'); const expression = byId('advanced-expression');
-    const bindSetInputs = () => [...byId('sets').querySelectorAll('input')].forEach(input => input.addEventListener('input', event => { model.setSet(input.id.charCodeAt(4) - 65, event.target.value); refresh(); }));
+    const bindSetInputs = () => [...byId('sets').querySelectorAll('input')].forEach(input => {
+      if (input.dataset.bound === 'true') return;
+      input.dataset.bound = 'true';
+      input.addEventListener('input', event => { model.setSet(input.id.charCodeAt(4) - 65, event.target.value); refresh(); });
+    });
     const refresh = () => {
       const count = Number(quantity.value);
-      if (!Number.isInteger(count) || count < 1 || count > 8) { quantity.setCustomValidity('Elige una cantidad entre 1 y 8.'); quantity.setAttribute('aria-invalid', 'true'); return; }
+      if (!Number.isInteger(count) || count < 1 || count > 5) { quantity.setCustomValidity('Elige una cantidad entre 1 y 5.'); quantity.setAttribute('aria-invalid', 'true'); return; }
       quantity.setCustomValidity(''); quantity.removeAttribute('aria-invalid'); model.setQuantity(count); model.setUniverse(universe.value); model.setExpression(expression.value); renderCalculator({ ...model.evaluate(), quantity: model.quantity, saved: [...model.saved] }); bindSetInputs();
     };
     quantity.addEventListener('change', refresh); universe.addEventListener('input', refresh); expression.addEventListener('input', refresh); byId('calculate').addEventListener('click', refresh); expression.addEventListener('keydown', event => { if (event.key === 'Enter') refresh(); });
-    byId('keys').addEventListener('click', event => { if (event.target.tagName !== 'BUTTON') return; expression.setRangeText(event.target.textContent, expression.selectionStart, expression.selectionEnd, 'end'); expression.focus(); refresh(); });
-    byId('advanced-example').addEventListener('click', () => { model.loadExample(); quantity.value = model.quantity; universe.value = model.universe; expression.value = model.expression; refresh(); }); byId('advanced-clear').addEventListener('click', () => { model.clear(); quantity.value = model.quantity; universe.value = model.universe; expression.value = model.expression; refresh(); universe.focus(); }); refresh();
+    byId('keys').addEventListener('click', event => {
+      const button = event.target.closest('button[data-symbol]');
+      if (!button) return;
+      expression.setRangeText(button.dataset.symbol, expression.selectionStart, expression.selectionEnd, 'end');
+      expression.focus();
+      refresh();
+    });
+    byId('advanced-clear').addEventListener('click', () => { model.clear(); quantity.value = model.quantity; universe.value = model.universe; expression.value = model.expression; refresh(); universe.focus(); }); refresh();
   }
   function initSql() { const model = new Modelo.SqlModel(); const selector = byId('sql-operation-select'); const diagram = byId('sql-venn'); Venn.render(diagram); const refresh = () => renderSql(model.evaluate(), diagram); selector.addEventListener('change', () => { model.setOperation(selector.value); refresh(); }); refresh(); }
   initNavigation(); initIntroduction(); initCalculator(); initSql();

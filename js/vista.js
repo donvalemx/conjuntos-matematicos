@@ -31,9 +31,38 @@
     const table = document.createElement('table'); table.innerHTML = '<thead><tr><th scope="col">elemento</th></tr></thead>'; const body = document.createElement('tbody'); elements.forEach(element => { const row = document.createElement('tr'); const cell = document.createElement('td'); cell.textContent = element; row.append(cell); body.append(row); }); table.append(body); byId('sql-output').replaceChildren(table);
   }
   function renderCalculator(state) {
-    const quantity = state.quantity; const setsHost = byId('sets'); setsHost.replaceChildren();
-    for (let index = 0; index < quantity; index++) { const name = String.fromCharCode(65 + index); const label = document.createElement('label'); const input = document.createElement('input'); label.htmlFor = `set-${name}`; label.textContent = `Conjunto ${name}`; input.id = label.htmlFor; input.value = state.saved[index] || ''; input.setAttribute('aria-describedby', 'advanced-help'); setsHost.append(label, input); }
-    byId('keys').replaceChildren(); const names = Array.from({ length: quantity }, (_, index) => String.fromCharCode(65 + index)); [...names, 'U', '∪', '∩', '−', '△', 'ᶜ', '(', ')', '|', '∅', '⊆', '⊂', '⊇', '⊃', '=', '≠', '∈', '∉', '∧', '∨', '¬', '→'].forEach(symbol => { const button = document.createElement('button'); button.type = 'button'; button.textContent = symbol; button.setAttribute('aria-label', `Insertar ${symbol}`); byId('keys').append(button); });
+    const quantity = state.quantity; const setsHost = byId('sets');
+    const names = Array.from({ length: quantity }, (_, index) => String.fromCharCode(65 + index));
+    const existingInputs = new Map([...setsHost.querySelectorAll('input')].map(input => [input.id, input]));
+    const existingNames = [...existingInputs.keys()].map(id => id.slice(4));
+    if (existingNames.join('') !== names.join('')) {
+      setsHost.replaceChildren();
+      for (let index = 0; index < quantity; index++) {
+        const name = names[index];
+        const label = document.createElement('label');
+        const input = existingInputs.get(`set-${name}`) || document.createElement('input');
+        label.htmlFor = `set-${name}`;
+        label.textContent = `Conjunto ${name}`;
+        input.id = label.htmlFor;
+        input.value = state.saved[index] || '';
+        input.setAttribute('aria-describedby', 'advanced-help');
+        setsHost.append(label, input);
+      }
+    }
+    const symbols = [...names, 'U', '∪', '∩', '−', 'Δ', 'ᶜ', '(', ')', "'", '|', '∅', '⊆', '⊂', '⊇', '⊃', '=', '≠', '∈', '∉'];
+    const keys = byId('keys');
+    if (keys.dataset.symbols !== symbols.join('|')) {
+      keys.replaceChildren();
+      symbols.forEach(symbol => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = symbol;
+        button.setAttribute('aria-label', `Insertar ${symbol}`);
+        button.dataset.symbol = symbol;
+        keys.append(button);
+      });
+      keys.dataset.symbols = symbols.join('|');
+    }
     const error = byId('error'); const messages = state.errors.map(item => `${item.name} contiene elementos fuera de U: ${formatSet(item.outside)}.`); error.hidden = !(messages.length || state.expressionError); error.textContent = messages.join(' ') || (state.expressionError ? state.expressionError.message : ''); setText('advanced-result', state.errors.length || state.expressionError ? 'Revisa los datos y la expresión.' : formatResult(state.result) + (Array.isArray(state.result) ? ` · ${countLabel(state.result.length)}` : '')); Distribucion.render(byId('advanced-diagram'), state.sets, state.universe, state.result); renderSummary(state);
   }
   function renderSummary(state) { const table = document.createElement('table'); table.innerHTML = '<thead><tr><th>Expresión</th><th>Resultado</th></tr></thead>'; const body = document.createElement('tbody'); state.summary.forEach(({ source, value }) => { const row = document.createElement('tr'); const label = document.createElement('td'); const cell = document.createElement('td'); label.textContent = source; cell.textContent = value === null ? 'Revisa U' : formatResult(value); row.append(label, cell); body.append(row); }); table.append(body); byId('summary').replaceChildren(table); }
