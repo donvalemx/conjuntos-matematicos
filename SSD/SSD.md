@@ -4,11 +4,12 @@ Este documento define lo necesario para construir la aplicación desde una carpe
 
 ## 1. Propósito y alcance
 
-Construir una aplicación de Matemáticas Discretas en español. El recorrido tendrá tres pestañas, en este orden:
+Construir una aplicación de Matemáticas Discretas en español. El recorrido tendrá cuatro pestañas, en este orden:
 
 1. **Introducción**: aprender operaciones básicas con dos conjuntos.
 2. **Calculadora de conjuntos**: crear de uno a ocho conjuntos y evaluar expresiones.
 3. **Aplicación en SQL**: comparar una operación de conjuntos con dos consultas SQL que producen los mismos elementos.
+4. **Tutorial**: presentar un video de YouTube para aprender a navegar por el sitio, con un enlace alternativo para abrirlo directamente.
 
 Usar HTML, CSS, JavaScript y SVG. La aplicación debe funcionar al abrir `index.html` directamente y desde un servidor estático. No requiere cuentas, servicios externos, conexión a internet, paquetes, compilación ni base de datos. Las consultas SQL se muestran como material de estudio; el navegador no las ejecuta.
 
@@ -46,27 +47,34 @@ conjuntos-discretas/
 | `sql-examples.js` | Dataset fijo y consultas de las seis operaciones |
 | `motor.js` | Analizador y evaluador de expresiones de la calculadora |
 | `distribucion.js` | Agrupación por pertenencia, tarjetas y círculos de la calculadora |
-| `modelo.js` | Estado y decisiones de los tres recorridos, sin acceder al DOM |
+| `modelo.js` | Estado y decisiones de Introducción, Calculadora y SQL, sin acceder al DOM |
 | `vista.js` | Actualización del DOM y construcción de tablas/campos |
 | `app.js` | Controladores y listeners; conecta modelo con vista |
 
 Cargar los ocho scripts con `defer`, en el orden de la lista anterior. Exponer `Conjuntos`, `Venn`, `SqlExamples`, `Motor`, `Distribucion`, `Modelo` y `Vista` en `globalThis`. Los scripts clásicos permiten abrir la aplicación con `file://`.
 
-El código sigue un MVC sencillo. `modelo.js` contiene `IntroModel`, `CalculatorModel` y `SqlModel`; `vista.js` solo recibe estados y pinta HTML/SVG; `app.js` registra primero la navegación y después los tres controladores. Cada panel conserva su estado en su modelo. Los módulos de dominio y diagramas no leen controles directamente.
+El código sigue un MVC sencillo. `modelo.js` contiene `IntroModel`, `CalculatorModel` y `SqlModel`; `vista.js` solo recibe estados y pinta HTML/SVG; `app.js` registra primero la navegación y después los controladores de Introducción, Calculadora y SQL. El Tutorial es contenido estático y no necesita modelo propio. Cada panel interactivo conserva su estado en su modelo. Los módulos de dominio y diagramas no leen controles directamente.
 
 ## 3. Estructura de la página y navegación
 
-La cabecera dirá **Conjuntos / Matemáticas Discretas**. Debajo habrá un `tablist` con tres botones y un `main` con los tres paneles. Mostrar un pie de página común.
+La cabecera dirá **Conjuntos / Matemáticas Discretas**. Debajo habrá un `tablist` con cuatro botones y un `main` con los cuatro paneles. Mostrar un pie de página común.
 
 | Pestaña | ID del botón | ID del panel |
 | --- | --- | --- |
 | Introducción | `tab-intro` | `intro-panel` |
 | Calculadora de conjuntos | `tab-calculator` | `calculator-panel` |
 | Aplicación en SQL | `tab-sql` | `sql-panel` |
+| Tutorial | `tab-tutorial` | `tutorial-panel` |
 
 Cada botón tendrá `role="tab"`, `aria-controls` y `aria-selected`. Cada panel tendrá `role="tabpanel"` y `aria-labelledby`. Al abrir, Introducción será la única pestaña seleccionada y su panel será el único visible. Usar `hidden` en los otros paneles.
 
-El clic activa una pestaña. Flecha derecha e izquierda activan la siguiente o anterior, con retorno circular. Home activa la primera; End, la última. La pestaña activa tendrá `tabindex="0"`; las otras, `-1`. Al navegar con flechas, mover también el foco.
+El clic activa una pestaña. Flecha derecha e izquierda activan la siguiente o anterior, con retorno circular entre las cuatro pestañas. Home activa Introducción; End activa Tutorial. La pestaña activa tendrá `tabindex="0"`; las otras, `-1`. Al navegar con flechas, mover también el foco.
+
+### Tutorial
+
+El panel `tutorial-panel` tendrá un encabezado con el rótulo «04 / TUTORIAL», el título «Aprende con un video.» y una breve indicación para reproducir el tutorial. Incluir un `iframe` con el video `https://www.youtube.com/embed/iWIjMo_SGEI`, título accesible, carga diferida, política de referencia estricta y permisos para reproducción y pantalla completa. Debajo, incluir un enlace que abra `https://www.youtube.com/watch?v=iWIjMo_SGEI` en una pestaña nueva con `rel="noopener noreferrer"` como alternativa si el video no se reproduce.
+
+Tutorial es un panel de contenido estático: no tiene estado de conjunto, no modifica los modelos de las otras pestañas y usa la navegación común descrita arriba. El `iframe` no debe impedir que la página se abra directamente; el contenido de YouTube requiere conexión a internet.
 
 ## 4. Reglas comunes de los datos
 
@@ -297,7 +305,7 @@ Construir y revisar en este orden:
 5. Implementar el motor avanzado siguiendo las prioridades y tipos descritos. Conectar campos dinámicos y sus botones.
 6. Añadir regiones, resumen y manejo de errores de la calculadora.
 7. Añadir SQL independiente con sus dos consultas, dataset y salida calculada.
-8. Aplicar estilos, adaptación móvil y accesibilidad. Revisar las tres pestañas con clic y teclado.
+8. Aplicar estilos, adaptación móvil y accesibilidad. Revisar las cuatro pestañas con clic y teclado; confirmar también el enlace alternativo del Tutorial.
 9. Ejecutar las comprobaciones y registrar los resultados reales de la entrega.
 
 Casos mínimos:

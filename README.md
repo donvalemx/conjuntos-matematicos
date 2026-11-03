@@ -1,6 +1,6 @@
 # Conjuntos · Matemáticas Discretas
 
-Aplicación web para estudiar conjuntos en tres pasos: aprender las operaciones básicas, crear expresiones propias y ver su aplicación en SQL. Está escrita en español y funciona en escritorio y móvil.
+Aplicación web para estudiar conjuntos en cuatro pestañas: aprender las operaciones básicas, crear expresiones propias, ver su aplicación en SQL y consultar un tutorial en video. Está escrita en español y funciona en escritorio y móvil.
 
 ## Abrir la aplicación
 
@@ -14,13 +14,14 @@ python3 -m http.server 8000
 
 Después abre `http://localhost:8000`. Python solo es necesario para esta opción.
 
-## Las tres pestañas
+## Las cuatro pestañas
 
 | Pestaña | Qué permite hacer |
 | --- | --- |
 | Introducción | Editar U, A y B; elegir unión, intersección, diferencia o complemento; ver resultado y Venn |
 | Calculadora de conjuntos | Definir de uno a ocho conjuntos y evaluar expresiones, cardinalidades, relaciones y lógica |
 | Aplicación en SQL | Seleccionar una operación y comparar su consulta con operador de conjuntos y su alternativa JOIN, junto al diagrama y la salida |
+| Tutorial | Reproducir un video para aprender a navegar por el sitio; también ofrece un enlace directo a YouTube |
 
 Cada pestaña conserva sus propios datos y selección. Cambiar de pestaña no los borra; recargar la página restaura los ejemplos iniciales.
 
@@ -64,7 +65,7 @@ Después de cada cambio, revisar que código, SSD y README describan el mismo co
 
 | Archivo | Función |
 | --- | --- |
-| `index.html` | Estructura de las tres pestañas |
+| `index.html` | Estructura de las cuatro pestañas |
 | `css/styles.css` | Estilos y adaptación a pantallas estrechas |
 | `js/conjuntos.js` | Operaciones básicas y validaciones |
 | `js/venn.js` | Venn de dos conjuntos, compartido por Introducción y SQL |
